@@ -1,0 +1,85 @@
+
+entity Category {
+	name String,
+    id Long,
+    creationDate Instant
+}
+
+entity Product {
+	name String,
+    id Long,
+    description Blob,
+    creationDate Instant
+    
+}
+relationship OneToOne {
+	Product{category} to Category
+}
+
+/**
+ * The Client entity.
+ */
+entity Client {
+	/**
+	* The firstname attribute.
+	*/
+    id Long,
+	firstName String,
+	lastName String,
+	mobile String,
+    creationDate Instant
+}
+
+/** Sales Entities**/
+entity Seller {
+id Long,
+firstName String,
+lastName String,
+email String,
+mobile String,
+creationDate Instant
+}
+
+entity Transaction{
+id Long,
+quantity Long,
+price Double,
+description String,
+creationDate Instant
+}
+
+relationship OneToOne {
+	Transaction{product} to Product
+}
+
+entity SaleInvoice{
+id Long,
+total Double,
+discount Double,
+creationDate Instant,
+status InvoiceStatus
+}
+
+enum InvoiceStatus{
+DRAFT, ACTIVATED, FINISHED
+}
+
+relationship OneToOne {
+	SaleInvoice{client} to Client
+}
+relationship OneToOne {
+	SaleInvoice{seller} to Seller
+}
+relationship OneToMany {
+	SaleInvoice{transactions} to Transaction
+}
+
+
+// Set pagination options
+paginate SaleInvoice with infinite-scroll
+
+// Set service options to all except few
+service all with serviceImpl except InvoiceStatus
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
